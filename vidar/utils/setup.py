@@ -49,7 +49,7 @@ def setup_arch(cfg, checkpoint=None, verbose=False):
     font1 = {'color': 'yellow', 'attrs': ('dark',)}
     font2 = {'color': 'yellow', 'attrs': ('dark', 'bold')}
 
-    folder, name = get_folder_name(cfg.model.file, 'models')
+    folder, name = get_folder_name(cfg.model.file, 'models', cfg_has(cfg.model, 'root', 'vidar/arch'))
     model = load_class(name, folder)(cfg)
 
     if cfg_has(cfg, 'model'):
@@ -119,8 +119,8 @@ def setup_dataset(cfg, root='vidar/datasets', verbose=False):
         name = get_from_cfg_list(cfg, 'name', i)
         repeat = get_from_cfg_list(cfg, 'repeat', i)
         cameras = get_from_cfg_list(cfg, 'cameras', i)
+        root = get_from_cfg_list(cfg, 'root', i) if cfg_has(cfg, 'root') else root
 
-        context = cfg.context
         labels = cfg.labels
 
         dataset = load_class(name + 'Dataset', root)(**args)
@@ -133,7 +133,7 @@ def setup_dataset(cfg, root='vidar/datasets', verbose=False):
             if cfg_has(cfg, 'repeat'):
                 string += f' (x{repeat})'
             if cfg_has(cfg, 'context'):
-                string += f' | context {context}'.replace(', ', ',')
+                string += f' | context {cfg.context}'.replace(', ', ',')
             if cfg_has(cfg, 'cameras'):
                 string += f' | cameras {cameras}'.replace(', ', ',')
             if cfg_has(cfg, 'labels'):
