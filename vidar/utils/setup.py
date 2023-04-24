@@ -108,7 +108,7 @@ def setup_dataset(cfg, root='vidar/datasets', verbose=False):
 
     datasets = []
     for i in range(num_datasets):
-        args = {}
+        args = {'cfg': cfg}
         for key, val in cfg.__dict__.items():
             if not is_namespace(val):
                 cfg_add_to_dict(args, cfg, key, i if key not in shared_keys else None)
