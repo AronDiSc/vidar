@@ -226,7 +226,7 @@ def resize_sample_input(sample, shape, shape_supervision=None,
         sample[key] = resize_pil(sample[key], shape, interpolation=pil_interpolation)
     # Mask
     for key in keys_with(sample, 'mask', without='raw'):
-        sample[key] = resize_pil(sample[key], shape, interpolation=InterpolationMode.NEAREST)
+        sample[key] = resize_npy(sample[key], shape, expand=False)
     # Input depth
     for key in keys_with(sample, 'input_depth'):
         shape_depth = [int(s * depth_downsample) for s in shape]
@@ -263,6 +263,9 @@ def resize_sample_supervision(sample, shape, depth_downsample=1.0, preserve_dept
         sample[key] = resize_npy_depth(sample[key], shape_depth)
     # Semantic
     for key in keys_with(sample, 'semantic'):
+        sample[key] = resize_npy(sample[key], shape, expand=False)
+    # Instance
+    for key in keys_with(sample, 'instance'):
         sample[key] = resize_npy(sample[key], shape, expand=False)
     # Optical flow
     for key in keys_with(sample, 'optical_flow'):
