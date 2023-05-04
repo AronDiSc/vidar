@@ -237,9 +237,16 @@ def setup_metrics(cfg):
 
     available_tasks = [key for key in cfg.__dict__.keys() if key is not 'tasks']
     requested_tasks = cfg_has(cfg, 'tasks', available_tasks)
-    tasks = [task for task in available_tasks if task in requested_tasks and task in methods]
-
-    return {task: methods[task](cfg.__dict__[task]) for task in tasks}
+    registered_tasks = [task for task in available_tasks if task in requested_tasks and task in methods]
+    method_dict = {task: methods[task](cfg.__dict__[task]) for task in registered_tasks}
+    folder_tasks = [task for task in available_tasks if task in requested_tasks and task not in methods]
+    for task in folder_tasks:
+        if not 'file' in cfg.__dict__[task]:
+            raise
+        root = cfg_has(cfg.__dict__[task], 'root', 'vidar')
+        folder, name = get_folder_name(cfg.__dict__[task].file, 'metrics', root)
+        method_dict.update({task: load_class(name, folder)(cfg.__dict__[task])})
+    return method_dict
 
 
 def worker_init_fn(worker_id):
