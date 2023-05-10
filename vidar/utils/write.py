@@ -62,6 +62,7 @@ def write_npz(filename, data):
     data : Value
         Data to be saved
     """
+    create_folder(filename)
     np.savez_compressed(filename, **data)
 
 
