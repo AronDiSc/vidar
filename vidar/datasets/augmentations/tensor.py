@@ -38,7 +38,7 @@ def to_tensor_sample(sample, tensor_type='torch.FloatTensor'):
     """
     # Convert using torchvision
     keys = ['rgb', 'mask', 'input_depth', 'depth', 'disparity',
-            'optical_flow', 'scene_flow']
+            'optical_flow', 'scene_flow', 'instance']
     for key_sample, val_sample in sample.items():
         for key in keys:
             if key in key_sample:

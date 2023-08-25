@@ -2,6 +2,7 @@
 
 import os
 import pickle as pkl
+import json
 
 import cv2
 import numpy as np
@@ -15,6 +16,22 @@ def create_folder(filename):
     """Create a new folder if it doesn't exist"""
     if '/' in filename:
         os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+
+def write_json(filename, data):
+    """
+    Write a Json file
+
+    Parameters
+    ----------
+    filename : String
+        File where the json file will be saved
+    data : Value
+        Json serializable data to be saved
+    """
+    create_folder(filename)
+    with open(filename, 'w') as fp:
+        json.dump(data, fp, sort_keys=True, indent=4)
 
 
 def write_pickle(filename, data):
@@ -45,6 +62,7 @@ def write_npz(filename, data):
     data : Value
         Data to be saved
     """
+    create_folder(filename)
     np.savez_compressed(filename, **data)
 
 

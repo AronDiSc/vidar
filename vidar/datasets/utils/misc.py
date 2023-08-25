@@ -12,7 +12,7 @@ from vidar.utils.decorators import iterate1
 from vidar.utils.types import is_seq, is_tensor, is_dict, is_int
 
 
-def stack_sample(sample, lidar_sample=None, radar_sample=None):
+def stack_sample(sample, lidar_sample=None, radar_sample=None, squeeze_sensor=True):
     """
     Stack samples from multiple cameras
 
@@ -34,7 +34,7 @@ def stack_sample(sample, lidar_sample=None, radar_sample=None):
     if len(sample) == 0:
         return None
     # If there is only one sensor don't do anything
-    if len(sample) == 1:
+    if len(sample) == 1 and squeeze_sensor:
         sample = sample[0]
         return sample
     # Otherwise, stack sample
@@ -67,7 +67,7 @@ def stack_sample(sample, lidar_sample=None, radar_sample=None):
                 stacked_sample[key] = [s[key] for s in sample]
         # Repeat for dictionaries
         elif is_dict(first_sample[key]):
-            stacked_sample[key] = stack_sample([s[key] for s in sample])
+            stacked_sample[key] = stack_sample([s[key] for s in sample], squeeze_sensor=squeeze_sensor)
         # Append lists
         else:
             stacked_sample[key] = [s[key] for s in sample]

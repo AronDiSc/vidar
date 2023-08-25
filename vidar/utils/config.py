@@ -302,7 +302,7 @@ def recursive_assignment(model, cfg, mode, verbose=True):
         cls = cfg.__dict__[key]
         if is_namespace(cls):
             if is_recursive(val):
-                folder, name = get_folder_name(val.file, mode)
+                folder, name = get_folder_name(val.file, mode, cfg_has(cls, 'root', 'vidar/arch'))
                 getattr(model, mode)[key] = load_class(name, folder)(cls)
                 if verbose:
                     string = '######### {}'.format(getattr(model, mode)[key].__class__.__name__)
